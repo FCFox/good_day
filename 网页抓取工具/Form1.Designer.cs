@@ -41,16 +41,12 @@
             this.titleText = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.URLText = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.resText = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.countText = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.imageURIText = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.nextImageText = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.encodeText = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -166,23 +162,6 @@
             this.URLText.TabIndex = 4;
             this.URLText.Text = "http://www.xieejia.com/gkmh/";
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(464, 45);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(29, 12);
-            this.label5.TabIndex = 5;
-            this.label5.Text = "资源";
-            // 
-            // resText
-            // 
-            this.resText.Location = new System.Drawing.Point(535, 45);
-            this.resText.Name = "resText";
-            this.resText.Size = new System.Drawing.Size(207, 21);
-            this.resText.TabIndex = 6;
-            this.resText.Text = "437.html";
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -235,38 +214,17 @@
             this.nextImageText.TabIndex = 12;
             this.nextImageText.Text = "<a href=\'([0-9]*_?[0-9]*\\.html)\'>下一页</a>";
             // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(466, 87);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(53, 12);
-            this.label8.TabIndex = 13;
-            this.label8.Text = "编码格式";
-            // 
-            // encodeText
-            // 
-            this.encodeText.Location = new System.Drawing.Point(535, 88);
-            this.encodeText.Name = "encodeText";
-            this.encodeText.Size = new System.Drawing.Size(100, 21);
-            this.encodeText.TabIndex = 14;
-            this.encodeText.Text = "utf-8";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(879, 522);
-            this.Controls.Add(this.encodeText);
-            this.Controls.Add(this.label8);
             this.Controls.Add(this.nextImageText);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.imageURIText);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.countText);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.resText);
-            this.Controls.Add(this.label5);
             this.Controls.Add(this.URLText);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.titleText);
@@ -293,8 +251,6 @@
         private System.Windows.Forms.TextBox titleText;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox URLText;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox resText;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox countText;
         private System.Windows.Forms.Label label7;
@@ -304,8 +260,6 @@
         private System.Windows.Forms.TextBox nextImageText;
         private System.Windows.Forms.Button stopBtn;
         private System.Windows.Forms.Button pauseBtn;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox encodeText;
     }
 }
 
