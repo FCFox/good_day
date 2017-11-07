@@ -178,7 +178,7 @@
             this.countText.Name = "countText";
             this.countText.Size = new System.Drawing.Size(100, 21);
             this.countText.TabIndex = 8;
-            this.countText.Text = "<li><a>共([0-9]*)页: .+?</a>";
+            this.countText.Text = "共([0-9]*)页";
             // 
             // label7
             // 
@@ -195,7 +195,7 @@
             this.imageURIText.Name = "imageURIText";
             this.imageURIText.Size = new System.Drawing.Size(312, 21);
             this.imageURIText.TabIndex = 10;
-            this.imageURIText.Text = "<img  src=\\\"(.*)\\\" +?/>";
+            this.imageURIText.Text = "<img.*src=\\\"(.*)\\\" +?/>";
             // 
             // label1
             // 

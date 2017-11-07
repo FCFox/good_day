@@ -10,18 +10,20 @@ using System.Text.RegularExpressions;
 using System.Net.Http.Headers;
 using System.IO.Compression;
 using System.Threading.Tasks;
+using System.Timers;
+using System.Linq;
 
 namespace 网页抓取工具
 {
     public partial class Form1 : Form
     {
-
+        
         public Form1()
         {
             InitializeComponent();
-
+           
         }
-
+       
         private void SavePathBtn_Click(object sender, EventArgs e)
         {
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
@@ -37,7 +39,7 @@ namespace 网页抓取工具
 
             using (var client = new HttpClient())
             {
-
+                
                 string URI = URLText.Text.Trim();
                 int lastSplitIndex = URI.LastIndexOf('/');
                 string url = URI.Substring(0, lastSplitIndex + 1).Trim();
@@ -48,7 +50,7 @@ namespace 网页抓取工具
                 HttpRequestHeaders headers = client.DefaultRequestHeaders;
                 headers.AcceptEncoding.ParseAdd("gzip,deflate");
                 headers.AcceptCharset.TryParseAdd("utf-8,gbk,gb2312");
-                headers.Accept.TryParseAdd("text/html,application/xhtml+xml,application/xml");
+                headers.Accept.TryParseAdd("*/*");
                 headers.Host = ur.Host;
 
                 var response = await client.GetAsync(URI);
@@ -60,7 +62,7 @@ namespace 网页抓取工具
                     charset = GetCharset(contentArray);
                 }
 
-                string content = await FixedContentAsync(charset, contentArray);
+                string content = FixedContent(charset, contentArray);
 
 
                 #region 正则表达式
@@ -68,7 +70,7 @@ namespace 网页抓取工具
                  string regTitle = titleText.Text.Trim();
 
                  string name = Regex.Match(content, regTitle).Groups[1].ToString(); //只取第一个匹配到的标题作为图片名字
-
+                
                  //获取总数量
                  string regCount = countText.Text.Trim();
 
@@ -120,8 +122,11 @@ namespace 网页抓取工具
                          {
                             //得到内容
                             response = await client.GetAsync(url+nextImage);
+                            
                             contentArray = await DownloadFileAsync(response);
-                            content = await FixedContentAsync(charset, contentArray);
+                            response.Dispose();
+                            
+                            content = FixedContent(charset, contentArray);
                         }
                          catch (Exception ex)
                          {
@@ -132,7 +137,7 @@ namespace 网页抓取工具
 
 
                  }
-
+                
                  #endregion
 
 
@@ -141,21 +146,46 @@ namespace 网页抓取工具
                  
                  string filePath = savePathTextBox.Text + "\\" + name;
                  if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
-                using( WebClient webClient = new WebClient())
+                for (int i = 0; i < imageUriList.Count; i++)
                 {
-                    List<byte[]> imageList = new List<byte[]>();
-                    for (int i = 0; i < imageUriList.Count; i++)
+                    ipRichTextBox.Text = string.Format("\n正在下载:{0}/{1}", i + 1, imageUriList.Count);
+                    string imageUri = imageUriList[i];
+
+                    string suffix = imageUriList[i].Substring(imageUriList[i].LastIndexOf("."));
+
+                    //await webClient.DownloadFileTaskAsync(imageUri, filePath + "\\" + i + suffix);
+                    Uri uri = new Uri(imageUri);
+                    client.DefaultRequestHeaders.Host = uri.Host;
+                    byte[] imageArray = null;
+                   
+                    try
                     {
-                        string imageUri = imageUriList[i];
-
-                        string suffix = imageUriList[i].Substring(imageUriList[i].LastIndexOf("."));
-
-                        await webClient.DownloadFileTaskAsync(imageUri, filePath + "\\" + i + suffix);
-
-                        ipRichTextBox.Text = string.Format("\n正在下载:{0}/{1}", i + 1, imageUriList.Count);
+                        imageArray = await client.GetByteArrayAsync(imageUri);
+                        
+                    }
+                    catch (Exception ex)
+                    {
+                        try
+                        {
+                            imageArray = await client.GetByteArrayAsync(imageUri);
+                        }
+                        catch (Exception ex1)
+                        {
+                            
+                        }
+                        
+                    }
+                    
+                    if (imageArray == null) continue;
+                    using (FileStream fs = new FileStream(filePath + "\\" + (i+1) + suffix, FileMode.Create))
+                    {
+                        await fs.WriteAsync(imageArray, 0, imageArray.Length);
+                        fs.Flush();
+                        fs.Dispose();
+                        fs.Close();
                     }
                 }
-                ipRichTextBox.Text = "\n下载完成";
+                ipRichTextBox.Text = "\n下载完成:"+name;
                 imageUriList.Clear();
                 
                  #endregion
@@ -196,7 +226,7 @@ namespace 网页抓取工具
         /// <param name="content"></param>
         /// <param name="reg"></param>
         /// <returns></returns>
-        async private Task<string> FixedContentAsync(string charset,byte[] content)
+        private string FixedContent(string charset,byte[] content)
         {
             return Encoding.GetEncoding(charset).GetString(content);
         }
