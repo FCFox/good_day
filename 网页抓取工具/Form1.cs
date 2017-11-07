@@ -51,7 +51,7 @@ namespace 网页抓取工具
                 headers.Host = ur.Host;
 
                 var response = await client.GetAsync(URI);
-                byte[] contentArray = await DownloadFile(response);
+                byte[] contentArray = await DownloadFileAsync(response);
                 string charset = Encoding.Default.BodyName;
                 if (response.Content.Headers.ContentType.CharSet.ToLower() != Encoding.Default.BodyName)
                 {
@@ -119,7 +119,7 @@ namespace 网页抓取工具
                          {
                             //得到内容
                             response = await client.GetAsync(URI);
-                            contentArray = await DownloadFile(response);
+                            contentArray = await DownloadFileAsync(response);
                             content = FixedContent(charset, contentArray);
                         }
                          catch (Exception ex)
@@ -159,7 +159,7 @@ namespace 网页抓取工具
             }
         }
 
-        async private Task<byte[]> DownloadFile(HttpResponseMessage response)
+        async private Task<byte[]> DownloadFileAsync(HttpResponseMessage response)
         {
            
             if (!response.IsSuccessStatusCode) return null;
