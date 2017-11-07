@@ -44,6 +44,7 @@ namespace 网页抓取工具
                 
                 Uri ur = new Uri(URI);
 
+                
                 HttpRequestHeaders headers = client.DefaultRequestHeaders;
                 headers.AcceptEncoding.ParseAdd("gzip,deflate");
                 headers.AcceptCharset.TryParseAdd("utf-8,gbk,gb2312");
@@ -53,12 +54,13 @@ namespace 网页抓取工具
                 var response = await client.GetAsync(URI);
                 byte[] contentArray = await DownloadFileAsync(response);
                 string charset = Encoding.Default.BodyName;
-                if (response.Content.Headers.ContentType.CharSet.ToLower() != Encoding.Default.BodyName)
+                string response_charset = response.Content.Headers.ContentType.CharSet;
+                if (string.IsNullOrEmpty(response_charset)|| response_charset.ToLower()!= Encoding.Default.BodyName)
                 {
                     charset = GetCharset(contentArray);
                 }
 
-                string content = FixedContent(charset, contentArray);
+                string content = await FixedContentAsync(charset, contentArray);
 
                 ipRichTextBox.Text = content;
 
@@ -118,9 +120,9 @@ namespace 网页抓取工具
                          try
                          {
                             //得到内容
-                            response = await client.GetAsync(URI);
+                            response = await client.GetAsync(url+nextImage);
                             contentArray = await DownloadFileAsync(response);
-                            content = FixedContent(charset, contentArray);
+                            content = await FixedContentAsync(charset, contentArray);
                         }
                          catch (Exception ex)
                          {
@@ -140,12 +142,13 @@ namespace 网页抓取工具
                  WebClient webClient = new WebClient();
                  string filePath = savePathTextBox.Text + "\\" + name;
                  if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
-
+             
 
                  for (int i = 0; i <imageUriList.Count; i++)
                  {
                      string imageUri = imageUriList[i];
 
+                     
                      await webClient.DownloadFileTaskAsync(imageUri, filePath + "\\" + (i+1)
                          + imageUri.Substring(imageUri.LastIndexOf(".")));
 
@@ -193,7 +196,7 @@ namespace 网页抓取工具
         /// <param name="content"></param>
         /// <param name="reg"></param>
         /// <returns></returns>
-        private string FixedContent(string charset,byte[] content)
+        async private Task<string> FixedContentAsync(string charset,byte[] content)
         {
             return Encoding.GetEncoding(charset).GetString(content);
         }
