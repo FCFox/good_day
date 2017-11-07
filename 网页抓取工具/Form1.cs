@@ -50,10 +50,15 @@ namespace 网页抓取工具
                 headers.Accept.TryParseAdd("text/html,application/xhtml+xml,application/xml");
                 headers.Host = ur.Host;
 
-               
-                string content = await DownloadFile(client, URI);
+                var response = await client.GetAsync(URI);
+                byte[] contentArray = await DownloadFile(response);
+                string charset = Encoding.Default.BodyName;
+                if (response.Content.Headers.ContentType.CharSet.ToLower() != Encoding.Default.BodyName)
+                {
+                    charset = GetCharset(contentArray);
+                }
 
-             
+                string content = FixedContent(charset, contentArray);
 
                 ipRichTextBox.Text = content;
 
@@ -113,8 +118,10 @@ namespace 网页抓取工具
                          try
                          {
                             //得到内容
-                           content = await DownloadFile(client, url + nextImage);
-                         }
+                            response = await client.GetAsync(URI);
+                            contentArray = await DownloadFile(response);
+                            content = FixedContent(charset, contentArray);
+                        }
                          catch (Exception ex)
                          {
                              //failedURIList.Add(url + resource);
@@ -152,12 +159,12 @@ namespace 网页抓取工具
             }
         }
 
-        async private Task<string> DownloadFile(HttpClient client, string URI)
+        async private Task<byte[]> DownloadFile(HttpResponseMessage response)
         {
-            var response = await client.GetAsync(URI);
-            if (!response.IsSuccessStatusCode) return string.Empty;
+           
+            if (!response.IsSuccessStatusCode) return null;
 
-            string content = string.Empty;
+            byte[] contentArray = null;
 
             if (response.Content.Headers.ContentEncoding.Contains("gzip"))
             {
@@ -166,22 +173,18 @@ namespace 网页抓取工具
                 {
                     await new GZipStream(stream, CompressionMode.Decompress).CopyToAsync(ms,10240); //固定长度
 
-                    content = FixedContent(response.Content.Headers.ContentType.CharSet, ms.ToArray());
+                    contentArray = ms.ToArray();
                 }
-
-               
                 
-               
-               
-                //stream.Dispose();
-                //gs.Dispose();
             }
             else
             {
-                byte[] contentBytes = await response.Content.ReadAsByteArrayAsync();
-                content = FixedContent(response.Content.Headers.ContentType.CharSet, contentBytes);
+                contentArray = await response.Content.ReadAsByteArrayAsync();
+                
             }
-            return content;
+            
+            
+            return contentArray;
         }
         /// <summary>
         /// 根据编码正确返回内容
@@ -192,17 +195,17 @@ namespace 网页抓取工具
         /// <returns></returns>
         private string FixedContent(string charset,byte[] content)
         {
-            string reg = @"charset=([\w]*-?[\d]*)";
-            if (string.IsNullOrEmpty(charset))
-            {
-                string findCharsetStr = Encoding.Default.GetString(content);
-                charset = Regex.Match(findCharsetStr, reg).Groups[1].ToString();
-            }
-
             return Encoding.GetEncoding(charset).GetString(content);
         }
 
-    
+        private string GetCharset(byte[] content)
+        {
+            string reg = @"charset=([\w]*-?[\d]*)";
+
+            string findCharsetStr = Encoding.Default.GetString(content);
+            string charset = Regex.Match(findCharsetStr, reg).Groups[1].ToString();
+            return charset;
+        }
     }
 
 }
