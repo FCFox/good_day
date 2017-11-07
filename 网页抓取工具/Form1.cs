@@ -62,7 +62,6 @@ namespace 网页抓取工具
 
                 string content = await FixedContentAsync(charset, contentArray);
 
-                ipRichTextBox.Text = content;
 
                 #region 正则表达式
                 //匹配正则 图片标题
@@ -129,7 +128,7 @@ namespace 网页抓取工具
                              //failedURIList.Add(url + resource);
                          }
                      }
-                     ipRichTextBox.Text = string.Format("正在缓存数据:{0}/{1}",num,count);
+                     ipRichTextBox.Text = string.Format("\n正在缓存数据:{0}/{1}",num,count);
 
 
                  }
@@ -138,26 +137,27 @@ namespace 网页抓取工具
 
 
                  #region 下载资源
-                 ipRichTextBox.Text = "缓存完成，准备下载";
-                 WebClient webClient = new WebClient();
+                 ipRichTextBox.Text = "\n缓存完成，准备下载";
+                 
                  string filePath = savePathTextBox.Text + "\\" + name;
                  if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
-             
+                using( WebClient webClient = new WebClient())
+                {
+                    List<byte[]> imageList = new List<byte[]>();
+                    for (int i = 0; i < imageUriList.Count; i++)
+                    {
+                        string imageUri = imageUriList[i];
 
-                 for (int i = 0; i <imageUriList.Count; i++)
-                 {
-                     string imageUri = imageUriList[i];
+                        string suffix = imageUriList[i].Substring(imageUriList[i].LastIndexOf("."));
 
-                     
-                     await webClient.DownloadFileTaskAsync(imageUri, filePath + "\\" + (i+1)
-                         + imageUri.Substring(imageUri.LastIndexOf(".")));
+                        await webClient.DownloadFileTaskAsync(imageUri, filePath + "\\" + i + suffix);
 
-                     ipRichTextBox.Text =string.Format("正在下载:{0}/{1}", i+1 ,imageUriList.Count) ;
-                 }
-                 webClient.Dispose();
-                 imageUriList.Clear();
-                 ipRichTextBox.Text = "下载完成";
-
+                        ipRichTextBox.Text = string.Format("\n正在下载:{0}/{1}", i + 1, imageUriList.Count);
+                    }
+                }
+                ipRichTextBox.Text = "\n下载完成";
+                imageUriList.Clear();
+                
                  #endregion
             }
         }
