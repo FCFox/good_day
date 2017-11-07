@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Threading;
 using System.Windows.Forms;
-using System.Net;
 using System.IO;
 using System.Net.Http;
 using System.Collections.Generic;
@@ -10,8 +8,7 @@ using System.Text.RegularExpressions;
 using System.Net.Http.Headers;
 using System.IO.Compression;
 using System.Threading.Tasks;
-using System.Timers;
-using System.Linq;
+
 
 namespace 网页抓取工具
 {
@@ -70,9 +67,18 @@ namespace 网页抓取工具
                  string regTitle = titleText.Text.Trim();
 
                  string name = Regex.Match(content, regTitle).Groups[1].ToString(); //只取第一个匹配到的标题作为图片名字
-                
-                 //获取总数量
-                 string regCount = countText.Text.Trim();
+                string regFileName = "<>:\\/|*\"?";
+                for (int i = 0; i < regFileName.Length; i++)
+                {
+                    char ch = regFileName[i];
+                    int index = -1;
+                    if ((index = name.IndexOf(ch)) != -1)
+                    {
+                        name = name.Remove(index, 1);
+                    }
+                }
+                //获取总数量
+                string regCount = countText.Text.Trim();
 
                  string countStr = Regex.Match(content, regCount).Groups[1].ToString();
      
@@ -143,8 +149,11 @@ namespace 网页抓取工具
 
                  #region 下载资源
                  ipRichTextBox.Text = "\n缓存完成，准备下载";
-                 
+                
+
+                
                  string filePath = savePathTextBox.Text + "\\" + name;
+                
                  if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
                 for (int i = 0; i < imageUriList.Count; i++)
                 {
