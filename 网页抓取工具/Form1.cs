@@ -163,8 +163,17 @@ namespace 网页抓取工具
                     string suffix = imageUriList[i].Substring(imageUriList[i].LastIndexOf("."));
 
                     //await webClient.DownloadFileTaskAsync(imageUri, filePath + "\\" + i + suffix);
-                    Uri uri = new Uri(imageUri);
-                    client.DefaultRequestHeaders.Host = uri.Host;
+
+                    if (imageUri.StartsWith("http"))
+                    {
+                        Uri uri = new Uri(imageUri);
+                        client.DefaultRequestHeaders.Host = uri.Host;
+                    }
+                    else
+                    {
+                        imageUri = "http://"+client.DefaultRequestHeaders.Host + imageUri;
+                    }
+                   
                     byte[] imageArray = null;
                    
                     try
