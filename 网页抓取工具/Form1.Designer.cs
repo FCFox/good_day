@@ -47,6 +47,8 @@
             this.imageURIText = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.nextImageText = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.fixedCountText = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -167,14 +169,14 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(464, 167);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(41, 12);
+            this.label6.Size = new System.Drawing.Size(113, 12);
             this.label6.TabIndex = 7;
-            this.label6.Text = "总页数";
+            this.label6.Text = "总页数的正则表达式";
             // 
             // countText
             // 
             this.countText.AccessibleRole = System.Windows.Forms.AccessibleRole.TitleBar;
-            this.countText.Location = new System.Drawing.Point(535, 167);
+            this.countText.Location = new System.Drawing.Point(583, 164);
             this.countText.Name = "countText";
             this.countText.Size = new System.Drawing.Size(100, 21);
             this.countText.TabIndex = 8;
@@ -195,7 +197,7 @@
             this.imageURIText.Name = "imageURIText";
             this.imageURIText.Size = new System.Drawing.Size(312, 21);
             this.imageURIText.TabIndex = 10;
-            this.imageURIText.Text = "<img.*src=\\\"(.*)\\\" +?/>";
+            this.imageURIText.Text = "<img.*src=\"(.*?)\".*?>";
             // 
             // label1
             // 
@@ -214,11 +216,29 @@
             this.nextImageText.TabIndex = 12;
             this.nextImageText.Text = "<a href=\'([0-9]*_?[0-9]*\\.html)\'>下一页</a>";
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(464, 101);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(53, 12);
+            this.label5.TabIndex = 13;
+            this.label5.Text = "指定页数";
+            // 
+            // fixedCountText
+            // 
+            this.fixedCountText.Location = new System.Drawing.Point(535, 98);
+            this.fixedCountText.Name = "fixedCountText";
+            this.fixedCountText.Size = new System.Drawing.Size(133, 21);
+            this.fixedCountText.TabIndex = 14;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(879, 522);
+            this.Controls.Add(this.fixedCountText);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.nextImageText);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.imageURIText);
@@ -260,6 +280,8 @@
         private System.Windows.Forms.TextBox nextImageText;
         private System.Windows.Forms.Button stopBtn;
         private System.Windows.Forms.Button pauseBtn;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox fixedCountText;
     }
 }
 
