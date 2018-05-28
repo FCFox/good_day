@@ -44,11 +44,11 @@
             this.label6 = new System.Windows.Forms.Label();
             this.countText = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.imageURIText = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.nextImageText = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.fixedCountText = new System.Windows.Forms.TextBox();
+            this.imageURIText = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -191,14 +191,6 @@
             this.label7.TabIndex = 9;
             this.label7.Text = "当前图片下载地址";
             // 
-            // imageURIText
-            // 
-            this.imageURIText.Location = new System.Drawing.Point(466, 246);
-            this.imageURIText.Name = "imageURIText";
-            this.imageURIText.Size = new System.Drawing.Size(312, 21);
-            this.imageURIText.TabIndex = 10;
-            this.imageURIText.Text = "<img.*src=\"(.*?)\".*?>";
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -231,6 +223,14 @@
             this.fixedCountText.Name = "fixedCountText";
             this.fixedCountText.Size = new System.Drawing.Size(133, 21);
             this.fixedCountText.TabIndex = 14;
+            // 
+            // imageURIText
+            // 
+            this.imageURIText.Location = new System.Drawing.Point(466, 246);
+            this.imageURIText.Name = "imageURIText";
+            this.imageURIText.Size = new System.Drawing.Size(312, 21);
+            this.imageURIText.TabIndex = 10;
+            this.imageURIText.Text = "<img.*src=(?:\'|\")(http.*?jpg)(?:\'|\")";
             // 
             // Form1
             // 
@@ -274,7 +274,6 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox countText;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox imageURIText;
         private System.Windows.Forms.RichTextBox ipRichTextBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox nextImageText;
@@ -282,6 +281,7 @@
         private System.Windows.Forms.Button pauseBtn;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox fixedCountText;
+        private System.Windows.Forms.TextBox imageURIText;
     }
 }
 

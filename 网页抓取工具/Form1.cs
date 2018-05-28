@@ -47,7 +47,7 @@ namespace 网页抓取工具
                 
                 HttpRequestHeaders headers = client.DefaultRequestHeaders;
                 headers.AcceptEncoding.ParseAdd("gzip,deflate");
-                headers.AcceptCharset.TryParseAdd("utf-8");
+                headers.AcceptCharset.TryParseAdd("utf-8,gbk.gb2312");
                 headers.Accept.TryParseAdd("*/*");
                 headers.Add("Referer",ur.Scheme+"://"+ur.Host);
                
@@ -98,8 +98,8 @@ namespace 网页抓取工具
      
                  //图片
                  string regImage = imageURIText.Text.Trim();
-                 string imageURI = Regex.Match(content, regImage).Groups[1].ToString().Trim(new char[] { '"', ' ' });
-
+                 GroupCollection result = Regex.Match(content, regImage).Groups;
+                 string imageURI = result[1].ToString();
                  
 
                  if (name == string.Empty || countStr == string.Empty||imageURI==string.Empty)
@@ -279,6 +279,11 @@ namespace 网页抓取工具
             string findCharsetStr = Encoding.Default.GetString(content);
             string charset = Regex.Match(findCharsetStr, reg).Groups[1].ToString();
             return charset;
+        }
+
+        private void imageURIText_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 
