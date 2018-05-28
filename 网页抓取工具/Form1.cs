@@ -47,16 +47,16 @@ namespace 网页抓取工具
                 
                 HttpRequestHeaders headers = client.DefaultRequestHeaders;
                 headers.AcceptEncoding.ParseAdd("gzip,deflate");
-                headers.AcceptCharset.TryParseAdd("utf-8,gbk,gb2312");
+                headers.AcceptCharset.TryParseAdd("utf-8");
                 headers.Accept.TryParseAdd("*/*");
                 headers.Add("Referer",ur.Scheme+"://"+ur.Host);
                
 #endregion
                 var response = await client.GetAsync(URI);
                 byte[] contentArray = await DownloadFileAsync(response);
-                string charset = Encoding.Default.BodyName;
+                string charset = "utf-8";
                 string response_charset = response.Content.Headers.ContentType.CharSet;
-                if (string.IsNullOrEmpty(response_charset)|| response_charset.ToLower()!= Encoding.Default.BodyName)
+                if (string.IsNullOrEmpty(response_charset)||response_charset.ToLower()!= charset)
                 {
                     charset = GetCharset(contentArray);
                 }
@@ -273,7 +273,8 @@ namespace 网页抓取工具
 
         private string GetCharset(byte[] content)
         {
-            string reg = @"charset=([\w]*-?[\d]*)";
+            //"charset=utf-8"
+            string reg =@"charset=(.*)(?="")";
 
             string findCharsetStr = Encoding.Default.GetString(content);
             string charset = Regex.Match(findCharsetStr, reg).Groups[1].ToString();
